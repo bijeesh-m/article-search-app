@@ -23,19 +23,5 @@ module.exports.getArticleById = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
-module.exports.getSearchResults = async (req, res) => {
-    
-    const { query } = req.params;
-    console.log(query);
-    try {
-        const articles = await Article.find();
 
-        
-        console.log(article);
-        if (article) {
-            res.status(200).send(article);
-        }
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-};
+

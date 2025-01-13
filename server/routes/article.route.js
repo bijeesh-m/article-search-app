@@ -6,6 +6,5 @@ const router = express.Router();
 
 router.get("/articles", articleController.getArticles);
 router.get("/articles/:id", authenticate, articleController.getArticleById);
-router.get("/search-articles/:query", authenticate, articleController.getSearchResults);
 
 module.exports = router;

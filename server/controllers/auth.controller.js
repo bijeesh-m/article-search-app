@@ -37,12 +37,21 @@ module.exports.login = async (req, res) => {
                 });
 
                 res.cookie("authToken", token, { httpOnly: true });
-                res.status(200).json({ message: "Login success!", user: isExist });
+                res.status(200).json({ message: "Login success!", user: isExist, token: token });
             } else {
                 res.status(400).send("Invalid password!");
             }
         }
     } catch (error) {
         console.log(error);
+    }
+};
+
+module.exports.logout = async (req, res) => {
+    try {
+        res.clearCookie("authToken", { httpOnly: true });
+        res.status(200).send("Logout success!");
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 };

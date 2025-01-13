@@ -9,7 +9,9 @@ const Login = () => {
         password: "",
     });
 
-    const navigate = useNavigate()
+    const [errors, setErrors] = useState({});
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -20,25 +22,49 @@ const Login = () => {
         const toastId = toast.loading("Logging...");
         e.preventDefault();
         console.log(formData);
+
+        // if (Object.keys(errors).length === 0) {
         axios
             .post("http://localhost:4000/login", formData, { withCredentials: true })
             .then((res) => {
                 console.log(res);
-                toast.success("Login success", { id: toastId });
-                navigate('/')
+                toast.success("Login success!", { id: toastId });
+                localStorage.setItem("userToken", res.data.token);
+                window.location.replace("/");
+                setErrors({});
             })
             .catch((err) => {
                 console.log(err);
-                toast.error("Error occured", { id: toastId });
-
+                // toast.error(err.response.data, { id: toastId });
             });
+        // } else {
+        //     setErrors(err);
+        //     toast.dismiss();
+        // }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+        if (!formData.name) {
+            errors.name = "Name is required.";
+        }
+        if (!formData.email) {
+            errors.email = "Email is required.";
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            errors.email = "Email is invalid.";
+        }
+        if (!formData.message) {
+            errors.message = "Message is required.";
+        }
+        return errors;
     };
 
     return (
         <div>
             <div>
-                <h2 className=" text-center mt-5">Login</h2>
-                <form onSubmit={handleLogin} className=" container p-5  d-flex flex-column gap-2 border rounded">
+                <form onSubmit={handleLogin} className=" container p-5  mt-5 d-flex flex-column gap-2 border rounded">
+                    <h2 className=" text-center">Login</h2>
+
                     <input
                         value={formData.email}
                         onChange={(e) => handleChange(e)}
